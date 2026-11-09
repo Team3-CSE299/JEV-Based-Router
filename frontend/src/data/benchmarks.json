@@ -1,0 +1,7 @@
+{
+  "coding": { "GPT-4.1": 91, "Claude Sonnet 4": 93, "Gemini 2.5 Pro": 89, "Llama 3.3 70B": 84, "Mistral Large": 82 },
+  "extraction": { "GPT-4.1": 88, "Claude Sonnet 4": 90, "Gemini 2.5 Pro": 92, "Llama 3.3 70B": 81, "Mistral Large": 79 },
+  "math": { "GPT-4.1": 94, "Claude Sonnet 4": 92, "Gemini 2.5 Pro": 90, "Llama 3.3 70B": 86, "Mistral Large": 80 },
+  "analysis": { "GPT-4.1": 90, "Claude Sonnet 4": 91, "Gemini 2.5 Pro": 93, "Llama 3.3 70B": 83, "Mistral Large": 81 },
+  "charting": { "GPT-4.1": 87, "Claude Sonnet 4": 89, "Gemini 2.5 Pro": 91, "Llama 3.3 70B": 78, "Mistral Large": 76 }
+}

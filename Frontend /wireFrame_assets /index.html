@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fintackle demo</title>
+<style>
+:root{--bg:#fff;--bar:#f1f1f1;--ink:#222;--mute:#666;--line:#bbb;--fill:#e3e3e3;--bar-fill:#888;--btn:#222;--btnink:#fff;--ok:#1d6b3a;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#161616;--bar:#222;--ink:#eee;--mute:#aaa;--line:#555;--fill:#2a2a2a;--bar-fill:#888;--btn:#eee;--btnink:#161616;--ok:#6fd195}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 -apple-system,"Helvetica Neue",Arial,sans-serif}
+nav{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--bar);border-bottom:2px solid var(--ink);padding:10px 24px;flex-wrap:wrap}
+.logo{border:2px solid var(--ink);padding:6px 12px;font-weight:700}
+.tabs button{background:none;border:0;border-bottom:3px solid transparent;font:inherit;color:var(--ink);padding:8px 10px;cursor:pointer}
+.tabs button.on{font-weight:700;border-color:var(--ink)}
+.feed{font-size:12px;color:var(--mute);font-weight:600}
+main{max-width:1100px;margin:0 auto;padding:28px 24px}
+h1{margin:0 0 16px;font-size:28px}
+h2{margin:0 0 12px;font-size:20px}
+.lab{font-size:12px;color:var(--mute);font-weight:700;margin:16px 0 6px}
+textarea{width:100%;height:150px;border:1px solid var(--ink);background:var(--bg);color:var(--ink);padding:10px;font:inherit;resize:vertical}
+.row{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+select{background:var(--fill);color:var(--ink);border:0;border-radius:12px;padding:6px 10px;font:inherit}
+.btn{background:var(--btn);color:var(--btnink);border:2px solid var(--btn);padding:10px 22px;font:inherit;font-weight:700;cursor:pointer}
+.btn.o{background:none;color:var(--ink);border-color:var(--ink)}
+.chips{display:flex;gap:10px;flex-wrap:wrap}
+.chips button{background:none;color:var(--ink);border:2px solid var(--ink);padding:10px 16px;font:inherit;font-weight:700;cursor:pointer}
+.box{border:1px solid var(--ink);padding:16px;margin-bottom:20px}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;font-size:12px;color:var(--mute);padding:8px 6px}
+td{padding:9px 6px;border-top:1px solid var(--line)}
+tr.hl td{background:var(--fill);font-weight:700}
+.tbl{overflow-x:auto}
+.grid{display:grid;grid-template-columns:2fr 1fr;gap:20px}
+@media(max-width:800px){.grid{grid-template-columns:1fr}}
+.dash{background:var(--fill);border:1px dashed var(--mute);padding:10px 12px;color:var(--mute)}
+.cands{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:12px}
+.cand{background:var(--fill);border:1px dashed var(--mute);padding:10px;font-size:13px}
+.cand.win{border:2px solid var(--ok)}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.two div{border:1px solid var(--ink);padding:12px}
+.meter{height:12px;background:var(--bar-fill);margin:4px 0 12px;transition:width .6s}
+.meta{font-size:12px;color:var(--mute);font-weight:600}
+.hide{display:none}
+#ans{min-height:110px;white-space:pre-wrap}
+.pill{color:var(--ok);font-weight:700}
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo">Fintackle</div>
+  <div class="tabs"><button id="t1" class="on" onclick="show(1)">New request</button><button id="t2" onclick="show(2)">Run</button></div>
+  <div class="feed">FEED: LIVE · API: OK</div>
+</nav>
+
+<main id="v1">
+  <h1>New financial request</h1>
+  <div class="lab">PROMPT</div>
+  <textarea id="p" placeholder="Paste a mixed financial prompt, e.g. extract the revenue table, calculate growth, fix this script, chart the result."></textarea>
+  <div class="row">
+    <div><div class="lab">PARALLEL-PATH THRESHOLD</div>
+      <select id="th"><option value="0.85">Confidence below 0.85</option><option value="0.7">Confidence below 0.70</option><option value="0.95">Confidence below 0.95</option></select></div>
+    <button class="btn" onclick="run()">Run request</button>
+  </div>
+  <div class="lab">EXAMPLE PROMPTS</div>
+  <div class="chips">
+    <button onclick="ex(0)">Revenue brief</button><button onclick="ex(1)">Code refactor + chart</button><button onclick="ex(2)">Filing extraction</button>
+  </div>
+  <div class="box" style="margin-top:24px"><h2 style="font-size:16px">Recent runs</h2>
+    <div class="tbl"><table><thead><tr><th>RUN</th><th>PROMPT</th><th>SUB-TASKS</th><th>COST</th><th>STATUS</th></tr></thead>
+    <tbody id="recent"><tr><td>#003</td><td>Extract Q2 revenue, chart it</td><td>3</td><td>$0.02</td><td>Done</td></tr>
+    <tr><td>#002</td><td>Fix growth script</td><td>2</td><td>$0.01</td><td>Done</td></tr>
+    <tr><td>#001</td><td>Summarise 10-K risks</td><td>2</td><td>$0.04</td><td>Done</td></tr></tbody></table></div>
+  </div>
+</main>
+
+<main id="v2" class="hide">
+  <div class="row" style="align-items:flex-start;margin-bottom:16px">
+    <div><div class="meta">RUN <span id="rn">#004</span></div><h1 id="ps" style="margin:0">[Prompt summary]</h1></div>
+    <div class="meta">MODE: LIVE | TOTAL COST: <span id="tc">$0.000</span> | TIME: <span id="tt">0.0</span> s</div>
+  </div>
+  <div class="grid">
+    <div>
+      <div class="box"><h2>Sub-tasks after decomposition</h2>
+        <div class="tbl"><table><thead><tr><th>#</th><th>TYPE</th><th>ROUTER PICK</th><th>CONF.</th><th>PATH</th><th>STATUS</th><th>COST</th><th>TIME</th></tr></thead><tbody id="rows"></tbody></table></div>
+        <div class="dash hide" id="fb" style="margin-top:12px">Fallback notice: sub-task 3 timed out, retried with the next-ranked model.</div>
+      </div>
+      <div class="box hide" id="par"><h2>Sub-task 2 detail: parallel path</h2>
+        <div class="cands" id="cands"></div>
+        <div class="two"><div id="judge">Judge: waiting…</div><div id="sand">Sandbox: tests passed 0/0.</div></div>
+      </div>
+    </div>
+    <div>
+      <div class="box"><h2 style="font-size:17px">Benchmark scores used by router</h2><div class="meta" style="margin-bottom:10px">SNAPSHOT: LIVE</div>
+        <div>Data analysis</div><div class="meter" style="width:82%"></div>
+        <div>Maths</div><div class="meter" style="width:61%"></div>
+        <div>Coding</div><div class="meter" style="width:74%"></div>
+        <div>Language</div><div class="meter" style="width:48%"></div>
+      </div>
+      <div class="box"><h2 style="font-size:17px">Cost log</h2><div class="dash" id="cl">Tokens in/out per model<br>Cost vs single frontier model: –</div></div>
+    </div>
+  </div>
+  <div class="box"><h2>Verified answer</h2>
+    <div class="dash" id="ans">Final merged answer appears here</div>
+    <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap"><button class="btn" onclick="dl()">Download log</button><button class="btn o" onclick="run(true)">Replay this run</button></div>
+  </div>
+</main>
+
+<script>
+var EX=["Extract the revenue table from the 10-K, calculate year-over-year growth, and chart the result.",
+"Refactor this growth-rate Python script to be faster, then chart the quarterly output.",
+"Extract total debt, cash and operating income from the attached filing."];
+var runN=4,last=null;
+function show(n){v1.classList.toggle("hide",n!=1);v2.classList.toggle("hide",n!=2);t1.className=n==1?"on":"";t2.className=n==2?"on":""}
+function ex(i){p.value=EX[i]}
+var T=[
+ {t:"Extraction",m:"Gemini 2.5 Pro",c:.93,path:"Single",cost:.004,s:1.8},
+ {t:"Calculation",m:"3 models",c:.71,path:"Parallel",cost:.021,s:4.2},
+ {t:"Code refactor",m:"Claude Sonnet",c:.9,path:"Single",cost:.009,s:3.1},
+ {t:"Chart code",m:"GPT-4.1",c:.88,path:"Single",cost:.006,s:2.2}];
+var C=[["Claude Sonnet","Growth = (rev_t / rev_t-1) - 1 → 12.4%",2,3.9,.007],["GPT-4.1","YoY growth computed → 12.4%, table added",1,3.2,.006],["DeepSeek V3","Growth 12.4% (no table)",3,4.2,.002]];
+function sleep(ms){return new Promise(function(r){setTimeout(r,ms)})}
+function render(rows){rows.innerHTML=T.map(function(x,i){return '<tr class="'+(i==1?'hl':'')+'" id="r'+i+'"><td>'+(i+1)+'</td><td>'+x.t+'</td><td>'+x.m+'</td><td>'+x.c.toFixed(2)+'</td><td>'+x.path+'</td><td class="st">Queued</td><td class="co">$0</td><td class="ti">0 s</td></tr>'}).join("")}
+async function run(replay){
+ var txt=p.value.trim()||EX[0];
+ if(!replay)runN++;
+ rn.textContent="#00"+runN;ps.textContent=txt.length>55?txt.slice(0,55)+"…":txt;
+ var thr=parseFloat(document.getElementById("th").value);
+ show(2);render(rows);fb.classList.add("hide");par.classList.add("hide");
+ ans.textContent="Running…";tc.textContent="$0.000";tt.textContent="0.0";cl.innerHTML="Tokens in/out per model<br>Cost vs single frontier model: –";
+ var tot=0,time=0;
+ for(var i=0;i<T.length;i++){
+  var r=document.getElementById("r"+i),x=T[i];
+  var isPar=x.c<thr;x.path=isPar?"Parallel":"Single";r.children[4].textContent=x.path;if(i==1)r.children[2].textContent=isPar?"3 models":x.m;
+  r.querySelector(".st").textContent="Running";await sleep(700);
+  if(isPar){showPar()}
+  var st="Done";
+  if(i==2){fb.classList.remove("hide");st="Retried"}
+  if(isPar)st="Judged";
+  r.querySelector(".st").textContent=st;r.querySelector(".co").textContent="$"+x.cost.toFixed(3);r.querySelector(".ti").textContent=x.s+" s";
+  tot+=x.cost;time+=x.s;tc.textContent="$"+tot.toFixed(3);tt.textContent=time.toFixed(1);
+ }
+ cl.innerHTML="Tokens in/out per model: 3.1k/0.9k · 2.4k/0.7k · 1.8k/0.5k<br>Cost vs single frontier model: <span class='pill'>"+Math.round((1-tot/0.11)*100)+"% lower</span>";
+ ans.className="";ans.style.cssText="background:var(--fill);border:1px dashed var(--mute);padding:10px 12px";
+ ans.textContent="Revenue grew 12.4% year over year (Calculation verified by judge, 2 of 3 candidates agreed).\nExtracted table, refactored script and growth chart code are ready.";
+ last={run:"#00"+runN,prompt:txt,subtasks:T,total_cost:tot,time:time};
+}
+function showPar(){
+ document.getElementById("par").classList.remove("hide");
+ cands.innerHTML=C.map(function(c,i){return '<div class="cand'+(c[2]==1?' win':'')+'"><b>Candidate '+"ABC"[i]+'</b><br>'+c[0]+'<br><i>'+c[1]+'</i><br>'+c[3]+' s · $'+c[4].toFixed(3)+'<br>Judge rank: '+c[2]+'</div>'}).join("");
+ judge.textContent="Judge: order shuffled, models hidden. Winner: Candidate B.";
+ sand.textContent="Sandbox: tests passed 3/3.";
+}
+function dl(){var b=new Blob([JSON.stringify(last||{note:"no run yet"},null,2)],{type:"application/json"});var a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="run-log.json";a.click()}
+</script>
+</body>
+</html>

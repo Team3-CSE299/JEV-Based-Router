@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Fintackle demo</title>
+  <link rel="stylesheet" href="./src/style.css">
+</head>
+<body>
+<nav>
+  <div class="logo">Fintackle</div>
+  <div class="tabs" aria-label="Views">
+    <button id="tabNew" class="on" type="button" data-view="new">New request</button>
+    <button id="tabRun" type="button" data-view="run">Run</button>
+    <button id="tabResults" type="button" data-view="results">Results</button>
+    <button id="tabSettings" type="button" data-view="settings">Settings</button>
+  </div>
+  <div class="feed">FEED: LIVE · API: MOCK</div>
+</nav>
+
+<main id="view-new">
+  <h1>New financial request</h1>
+  <div class="lab">PROMPT</div>
+  <textarea id="prompt" placeholder="Paste a mixed financial prompt, e.g. extract the revenue table, calculate growth, fix this script, chart the result."></textarea>
+  <div class="row between">
+    <div>
+      <div class="lab">PARALLEL-PATH THRESHOLD</div>
+      <select id="threshold"></select>
+    </div>
+    <button class="btn" id="runBtn" type="button">Run request</button>
+  </div>
+  <div class="lab">EXAMPLE PROMPTS</div>
+  <div class="chips" id="examples"></div>
+
+  <div class="box mt24">
+    <h2 class="h2sm">Recent runs</h2>
+    <div class="tbl"><table>
+      <thead><tr><th>RUN</th><th>PROMPT</th><th>SUB-TASKS</th><th>COST</th><th>STATUS</th></tr></thead>
+      <tbody id="recentBody"><tr><td colspan="5" class="meta">No runs yet.</td></tr></tbody>
+    </table></div>
+  </div>
+</main>
+
+<main id="view-run" class="hide">
+  <div class="row between start mb16">
+    <div>
+      <div class="meta">RUN <span id="runId">—</span></div>
+      <h1 id="promptSummary" class="m0">[Prompt summary]</h1>
+    </div>
+    <div class="meta">MODE: LIVE | TOTAL COST: <span id="totalCost">$0.000</span> | TIME: <span id="totalTime">0.0</span> s</div>
+  </div>
+  <div class="grid">
+    <div>
+      <div class="box">
+        <h2>Sub-tasks after decomposition</h2>
+        <div class="tbl"><table>
+          <thead><tr><th>#</th><th>TYPE</th><th>ROUTER PICK</th><th>CONF.</th><th>PATH</th><th>STATUS</th><th>COST</th><th>TIME</th></tr></thead>
+          <tbody id="taskRows"></tbody>
+        </table></div>
+        <div class="dash hide mt12" id="fallbackNotice">Fallback notice: a sub-task timed out, retried with the next-ranked model.</div>
+      </div>
+      <div class="box hide" id="parallelBox">
+        <h2 id="parallelTitle">Sub-task detail: parallel path</h2>
+        <div class="cands" id="candidates"></div>
+        <div class="two">
+          <div id="judgeBox">Judge: waiting…</div>
+          <div id="sandboxBox">Sandbox: waiting…</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="box">
+        <h2 class="h2md">Benchmark scores used by router</h2>
+        <div class="meta mb10">SNAPSHOT: MOCK</div>
+        <div id="benchmarkPanel"></div>
+      </div>
+      <div class="box">
+        <h2 class="h2md">Cost log</h2>
+        <div class="dash" id="costLog">Tokens in/out per model<br>Cost vs single frontier model: –</div>
+      </div>
+    </div>
+  </div>
+  <div class="box">
+    <h2>Verified answer</h2>
+    <div class="dash" id="answer">Final merged answer appears here</div>
+    <div class="actions mt14">
+      <button class="btn" id="downloadBtn" type="button" disabled>Download log</button>
+      <button class="btn o" id="replayBtn" type="button" disabled>Replay this run</button>
+    </div>
+  </div>
+</main>
+
+<main id="view-results" class="hide">
+  <div class="box">
+    <h2>Past runs</h2>
+    <div class="tbl"><table>
+      <thead><tr><th>ID</th><th>TIME</th><th>PROMPT</th><th>SUB-TASKS</th><th>COST</th><th>DURATION</th><th>PARALLEL</th></tr></thead>
+      <tbody id="resultsBody"><tr><td colspan="7" class="meta">No past runs.</td></tr></tbody>
+    </table></div>
+  </div>
+  <div class="box">
+    <h2>Routing comparison</h2>
+    <p class="meta mb10">Dummy comparison across stored runs: JEV routing vs best single model vs random routing.</p>
+    <div id="comparisonChart"></div>
+  </div>
+</main>
+
+<main id="view-settings" class="hide">
+  <div class="grid">
+    <div class="box">
+      <h2>Settings</h2>
+      <div class="lab">DEFAULT PARALLEL-PATH THRESHOLD</div>
+      <select id="defaultThreshold"></select>
+      <label class="check"><input type="checkbox" id="judgeEnabled" checked> Post-execution judge on/off</label>
+      <p class="meta">The router reads model benchmark scores from the model list below (and <code>src/data/*</code>).</p>
+      <div class="actions"><button class="btn" id="saveSettings" type="button">Save settings</button><span id="settingsMsg" class="meta"></span></div>
+    </div>
+    <div class="box">
+      <h2>Models and benchmark scores</h2>
+      <div class="tbl"><table>
+        <thead><tr><th>MODEL</th><th>PROVIDER</th><th>CODING</th><th>EXTRACT</th><th>MATH</th><th>ANALYSIS</th><th>CHART</th><th>$/1K</th></tr></thead>
+        <tbody id="modelsBody"></tbody>
+      </table></div>
+    </div>
+  </div>
+</main>
+
+<script src="./src/data/benchmarks.js"></script>
+<script src="./src/data/models.js"></script>
+<script src="./src/data/examples.js"></script>
+<script src="./src/mockApi.js"></script>
+<script src="./src/app.js"></script>
+</body>
+</html>

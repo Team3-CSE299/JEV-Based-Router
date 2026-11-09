@@ -1,0 +1,50 @@
+:root{--bg:#fff;--bar:#f1f1f1;--ink:#222;--mute:#666;--line:#bbb;--fill:#e3e3e3;--bar-fill:#888;--btn:#222;--btnink:#fff;--ok:#1d6b3a;--warn:#8a5a00;--bad:#8f2d2d;box-sizing:border-box}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#161616;--bar:#222;--ink:#eee;--mute:#aaa;--line:#555;--fill:#2a2a2a;--bar-fill:#888;--btn:#eee;--btnink:#161616;--ok:#6fd195;--warn:#e0b35a;--bad:#f08a8a}}
+:root[data-theme="dark"]{--bg:#161616;--bar:#222;--ink:#eee;--mute:#aaa;--line:#555;--fill:#2a2a2a;--bar-fill:#888;--btn:#eee;--btnink:#161616;--ok:#6fd195;--warn:#e0b35a;--bad:#f08a8a}
+:root[data-theme="light"]{--bg:#fff;--bar:#f1f1f1;--ink:#222;--mute:#666;--line:#bbb;--fill:#e3e3e3;--bar-fill:#888;--btn:#222;--btnink:#fff;--ok:#1d6b3a}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 -apple-system,"Helvetica Neue",Arial,sans-serif;padding-bottom:env(safe-area-inset-bottom,0px)}
+nav{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--bar);border-bottom:2px solid var(--ink);padding:10px 24px;flex-wrap:wrap}
+.logo{border:2px solid var(--ink);padding:6px 12px;font-weight:700}
+.tabs button{background:none;border:0;border-bottom:3px solid transparent;font:inherit;color:var(--ink);padding:8px 10px;cursor:pointer}
+.tabs button.on{font-weight:700;border-color:var(--ink)}
+.feed{font-size:12px;color:var(--mute);font-weight:600}
+main{max-width:1100px;margin:0 auto;padding:28px 24px}
+h1{margin:0 0 16px;font-size:28px}
+h2{margin:0 0 12px;font-size:20px}
+.h2sm{font-size:16px}.h2md{font-size:17px}.m0{margin:0}
+.lab{font-size:12px;color:var(--mute);font-weight:700;margin:16px 0 6px}
+textarea{width:100%;height:150px;border:1px solid var(--ink);background:var(--bg);color:var(--ink);padding:10px;font:inherit;resize:vertical}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end}
+.between{justify-content:space-between}.start{align-items:flex-start}
+select,input[type="text"]{background:var(--fill);color:var(--ink);border:0;border-radius:12px;padding:6px 10px;font:inherit}
+.btn{background:var(--btn);color:var(--btnink);border:2px solid var(--btn);padding:10px 22px;font:inherit;font-weight:700;cursor:pointer}
+.btn.o{background:none;color:var(--ink);border-color:var(--ink)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.chips{display:flex;gap:10px;flex-wrap:wrap}
+.chips button{background:none;color:var(--ink);border:2px solid var(--ink);padding:10px 16px;font:inherit;font-weight:700;cursor:pointer}
+.box{border:1px solid var(--ink);padding:16px;margin-bottom:20px}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;font-size:12px;color:var(--mute);padding:8px 6px;white-space:nowrap}
+td{padding:9px 6px;border-top:1px solid var(--line);vertical-align:top}
+tr.hl td{background:var(--fill);font-weight:700}
+.tbl{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.grid{display:grid;grid-template-columns:2fr 1fr;gap:20px}
+@media(max-width:900px){.grid{grid-template-columns:1fr}nav{padding:10px 14px}main{padding:18px 14px}}
+.dash{background:var(--fill);border:1px dashed var(--mute);padding:10px 12px;color:var(--mute);white-space:pre-wrap}
+.cands{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:12px}
+.cand{background:var(--fill);border:1px dashed var(--mute);padding:10px;font-size:13px}
+.cand.win{border:2px solid var(--ok)}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.two div{border:1px solid var(--ink);padding:12px}
+.meter{height:12px;background:var(--bar-fill);margin:4px 0 12px;transition:width .4s;max-width:100%}
+.meta{font-size:12px;color:var(--mute);font-weight:600}
+.hide{display:none !important}
+#answer{min-height:110px}
+.pill{color:var(--ok);font-weight:700}
+.mt24{margin-top:24px}.mt14{margin-top:14px}.mt12{margin-top:12px}.mb16{margin-bottom:16px}.mb10{margin-bottom:10px}
+.actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.check{display:flex;align-items:center;gap:8px;margin:14px 0;font-size:14px}
+code{background:var(--fill);padding:1px 4px;border:1px solid var(--line);font-size:12px}
+svg text{fill:var(--ink);font:11px -apple-system,Arial,sans-serif}
+svg .g{stroke:var(--line)}
